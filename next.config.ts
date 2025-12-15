@@ -5,9 +5,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // Uncomment if deploying to username.github.io/showcase
-  // basePath: '/showcase',
-  // assetPrefix: '/showcase',
+  basePath: '/showcase',
+  assetPrefix: '/showcase',
 };
 
 export default nextConfig;
