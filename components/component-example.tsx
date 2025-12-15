@@ -1,7 +1,16 @@
 "use client"
 
 import * as React from "react"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 import {
   Example,
   ExampleWrapper,
@@ -66,14 +75,180 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { PlusSignIcon, BluetoothIcon, MoreVerticalCircle01Icon, FileIcon, FolderIcon, FolderOpenIcon, CodeIcon, MoreHorizontalCircle01Icon, SearchIcon, FloppyDiskIcon, DownloadIcon, EyeIcon, LayoutIcon, PaintBoardIcon, SunIcon, MoonIcon, ComputerIcon, UserIcon, CreditCardIcon, SettingsIcon, KeyboardIcon, LanguageCircleIcon, NotificationIcon, MailIcon, ShieldIcon, HelpCircleIcon, File01Icon, LogoutIcon } from "@hugeicons/core-free-icons"
+import { PlusSignIcon, BluetoothIcon, MoreVerticalCircle01Icon, FileIcon, FolderIcon, FolderOpenIcon, CodeIcon, MoreHorizontalCircle01Icon, SearchIcon, FloppyDiskIcon, DownloadIcon, EyeIcon, LayoutIcon, PaintBoardIcon, SunIcon, MoonIcon, ComputerIcon, UserIcon, CreditCardIcon, SettingsIcon, KeyboardIcon, LanguageCircleIcon, NotificationIcon, MailIcon, ShieldIcon, HelpCircleIcon, File01Icon, LogoutIcon, ArrowUp01Icon } from "@hugeicons/core-free-icons"
 
 export function ComponentExample() {
   return (
     <ExampleWrapper>
+      <ChartExample />
       <CardExample />
       <FormExample />
     </ExampleWrapper>
+  )
+}
+
+const chartData = [
+  { month: "Jan", revenue: 4200, users: 2400 },
+  { month: "Feb", revenue: 3800, users: 2100 },
+  { month: "Mar", revenue: 5100, users: 2800 },
+  { month: "Apr", revenue: 4600, users: 2600 },
+  { month: "May", revenue: 6200, users: 3200 },
+  { month: "Jun", revenue: 5800, users: 3000 },
+  { month: "Jul", revenue: 7400, users: 3800 },
+  { month: "Aug", revenue: 6900, users: 3500 },
+  { month: "Sep", revenue: 8200, users: 4100 },
+  { month: "Oct", revenue: 7600, users: 3900 },
+  { month: "Nov", revenue: 9100, users: 4600 },
+  { month: "Dec", revenue: 8700, users: 4400 },
+]
+
+const chartConfig = {
+  revenue: {
+    label: "Revenue",
+    color: "var(--chart-4)",
+  },
+  users: {
+    label: "Users",
+    color: "var(--chart-2)",
+  },
+} satisfies ChartConfig
+
+function ChartExample() {
+  const totalRevenue = chartData.reduce((sum, item) => sum + item.revenue, 0)
+  const totalUsers = chartData.reduce((sum, item) => sum + item.users, 0)
+  const revenueGrowth = (
+    ((chartData[chartData.length - 1].revenue - chartData[0].revenue) /
+      chartData[0].revenue) *
+    100
+  ).toFixed(1)
+
+  return (
+    <Example
+      title="Chart"
+      className="items-center justify-center"
+      containerClassName="md:col-span-2"
+    >
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div>
+              <CardTitle className="text-base font-semibold tracking-tight">
+                Revenue Overview
+              </CardTitle>
+              <CardDescription className="mt-0.5">
+                Monthly performance metrics for 2024
+              </CardDescription>
+            </div>
+            <Badge
+              variant="secondary"
+              className="bg-primary/10 text-primary border-primary/20 gap-1 border"
+            >
+              <HugeiconsIcon
+                icon={ArrowUp01Icon}
+                strokeWidth={2}
+                className="size-3"
+              />
+              {revenueGrowth}%
+            </Badge>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="bg-muted/50 rounded-lg p-3">
+              <p className="text-muted-foreground text-[10px] font-medium uppercase tracking-wider">
+                Total Revenue
+              </p>
+              <p className="text-foreground mt-1 text-xl font-bold tabular-nums tracking-tight">
+                ${totalRevenue.toLocaleString()}
+              </p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <p className="text-muted-foreground text-[10px] font-medium uppercase tracking-wider">
+                Total Users
+              </p>
+              <p className="text-foreground mt-1 text-xl font-bold tabular-nums tracking-tight">
+                {totalUsers.toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-2">
+          <ChartContainer config={chartConfig} className="h-64 w-full">
+            <AreaChart
+              accessibilityLayer
+              data={chartData}
+              margin={{ left: 12, right: 12 }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={true}
+                axisLine={false}
+                tickMargin={8}
+              />
+              <YAxis
+                tickLine={true}
+                axisLine={false}
+                tickMargin={8}
+                tickFormatter={(value) =>
+                  value >= 1000 ? `${value / 1000}k` : value
+                }
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dot" />}
+              />
+              <defs>
+                <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-revenue)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-revenue)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+                <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-users)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-users)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <Area
+                dataKey="users"
+                type="natural"
+                fill="url(#fillUsers)"
+                fillOpacity={0.4}
+                stroke="var(--color-users)"
+                stackId="a"
+              />
+              <Area
+                dataKey="revenue"
+                type="natural"
+                fill="url(#fillRevenue)"
+                fillOpacity={0.4}
+                stroke="var(--color-revenue)"
+                stackId="a"
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+        <CardFooter>
+          <Button variant="ghost" size="sm">
+            View Details
+          </Button>
+        </CardFooter>
+      </Card>
+    </Example>
   )
 }
 
