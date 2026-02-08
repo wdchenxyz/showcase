@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoutButton } from "./LogoutButton";
 
 export default function DashboardLayout({
   children,
@@ -9,7 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex min-h-screen">
-      <aside className="w-56 shrink-0 border-r border-border bg-card p-4">
+      <aside className="flex w-56 shrink-0 flex-col border-r border-border bg-card p-4">
         <Link href="/" className="mb-6 block text-lg font-bold">
           Showcase
         </Link>
@@ -33,6 +34,9 @@ export default function DashboardLayout({
             User Directory
           </Link>
         </nav>
+        <div className="mt-auto border-t border-border pt-3">
+          <LogoutButton />
+        </div>
       </aside>
       <div className="flex-1">{children}</div>
       {modal}

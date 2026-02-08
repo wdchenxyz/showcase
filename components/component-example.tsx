@@ -171,7 +171,7 @@ function ChartExample() {
           </div>
         </CardHeader>
         <CardContent className="pt-2">
-          <ChartContainer config={chartConfig} className="h-64 w-full">
+          <ChartContainer id="demo-revenue" config={chartConfig} className="h-64 w-full">
             <AreaChart
               accessibilityLayer
               data={chartData}
