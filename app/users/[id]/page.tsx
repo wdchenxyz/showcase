@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface User {
   id: number;
@@ -20,8 +21,10 @@ export async function generateMetadata({
   const res = await fetch(
     `https://jsonplaceholder.typicode.com/users/${id}`
   );
-  const user: User = await res.json();
 
+  if (!res.ok) return { title: "User not found — Directory" };
+
+  const user: User = await res.json();
   return { title: `${user.name} — Directory` };
 }
 
@@ -36,7 +39,7 @@ export default async function UserDetailPage({
     { cache: "no-store" }
   );
 
-  if (!res.ok) throw new Error("User not found");
+  if (!res.ok) notFound();
 
   const user: User = await res.json();
 
