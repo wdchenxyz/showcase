@@ -12,19 +12,37 @@ interface User {
   address: { street: string; suite: string; city: string; zipcode: string };
 }
 
+// Re-generate static pages every hour
+export const revalidate = 3600;
+
+// Allow IDs not returned by generateStaticParams (rendered on-demand)
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  const users: User[] = await res.json();
+
+  return users.map((user) => ({ id: String(user.id) }));
+}
+
+async function fetchUser(id: string): Promise<User | null> {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/users/${id}`
+  );
+  if (!res.ok) return null;
+  return res.json();
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3002";
-  const res = await fetch(`${baseUrl}/api/users/${id}`);
+  const user = await fetchUser(id);
 
-  if (!res.ok) return { title: "User not found — Directory" };
+  if (!user) return { title: "User not found — Directory" };
 
-  const user: User = await res.json();
   return { title: `${user.name} — Directory` };
 }
 
@@ -34,15 +52,9 @@ export default async function UserDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3002";
-  const res = await fetch(`${baseUrl}/api/users/${id}`, {
-    cache: "no-store",
-  });
+  const user = await fetchUser(id);
 
-  if (!res.ok) notFound();
-
-  const user: User = await res.json();
+  if (!user) notFound();
 
   return (
     <div className="mx-auto max-w-2xl">
