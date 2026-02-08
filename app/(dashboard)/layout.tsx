@@ -13,6 +13,12 @@ export default function DashboardLayout({
         </Link>
         <nav className="space-y-1 text-sm">
           <Link
+            href="/dashboard"
+            className="block rounded-md px-3 py-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            Dashboard
+          </Link>
+          <Link
             href="/users"
             className="block rounded-md px-3 py-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
           >
