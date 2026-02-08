@@ -2,8 +2,10 @@ import Link from "next/link";
 
 export default function DashboardLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <div className="flex min-h-screen">
@@ -33,6 +35,7 @@ export default function DashboardLayout({
         </nav>
       </aside>
       <div className="flex-1">{children}</div>
+      {modal}
     </div>
   );
 }

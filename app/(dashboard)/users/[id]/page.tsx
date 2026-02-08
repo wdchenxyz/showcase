@@ -18,9 +18,9 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const res = await fetch(
-    `https://jsonplaceholder.typicode.com/users/${id}`
-  );
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3002";
+  const res = await fetch(`${baseUrl}/api/users/${id}`);
 
   if (!res.ok) return { title: "User not found — Directory" };
 
@@ -34,10 +34,11 @@ export default async function UserDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const res = await fetch(
-    `https://jsonplaceholder.typicode.com/users/${id}`,
-    { cache: "no-store" }
-  );
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3002";
+  const res = await fetch(`${baseUrl}/api/users/${id}`, {
+    cache: "no-store",
+  });
 
   if (!res.ok) notFound();
 
