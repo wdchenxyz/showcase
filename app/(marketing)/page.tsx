@@ -12,7 +12,7 @@ export default function Page() {
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Link
           href="/demo"
           className="rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent"
@@ -30,6 +30,12 @@ export default function Page() {
           className="rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent"
         >
           User Directory
+        </Link>
+        <Link
+          href="/demo/json-render"
+          className="rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent"
+        >
+          Json Render
         </Link>
       </div>
     </div>

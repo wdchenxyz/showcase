@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
+import { getRequestOrigin } from "@/lib/get-request-origin";
 
 interface User {
   id: number;
@@ -16,9 +17,8 @@ export default async function InterceptedUserPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3002";
-  const res = await fetch(`${baseUrl}/api/users/${id}`, {
+  const origin = await getRequestOrigin();
+  const res = await fetch(new URL(`/api/users/${id}`, origin), {
     cache: "no-store",
   });
 

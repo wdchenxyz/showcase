@@ -22,6 +22,12 @@ export default function DashboardLayout({
             Demo
           </Link>
           <Link
+            href="/demo/json-render"
+            className="block rounded-md px-3 py-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            Json Render
+          </Link>
+          <Link
             href="/dashboard"
             className="block rounded-md px-3 py-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
           >

@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
+import { getRequestOrigin } from "@/lib/get-request-origin";
+
 export type AddUserState = {
   message: string;
   success: boolean;
@@ -17,14 +19,12 @@ export async function addUser(
     return { message: "Name is required.", success: false };
   }
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}/api/users`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
-    }
-  );
+  const origin = await getRequestOrigin();
+  const res = await fetch(new URL("/api/users", origin), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+  });
 
   if (!res.ok) {
     return { message: "Failed to add user.", success: false };

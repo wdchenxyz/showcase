@@ -1,3 +1,4 @@
+import { getRequestOrigin } from "@/lib/get-request-origin";
 import SearchableUserList from "./SearchableUserList";
 
 interface User {
@@ -11,10 +12,8 @@ export default async function UserList() {
   // Uncomment the next line to test the error state:
   // if (Math.random() > 0.5) throw new Error("Failed to load users");
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3002"}/api/users`,
-    { cache: "no-store" }
-  );
+  const origin = await getRequestOrigin();
+  const res = await fetch(new URL("/api/users", origin), { cache: "no-store" });
 
   if (!res.ok) throw new Error("Failed to fetch users");
 
