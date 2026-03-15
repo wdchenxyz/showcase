@@ -2,133 +2,72 @@ import { defineCatalog } from "@json-render/core";
 import { schema } from "@json-render/react/schema";
 import { z } from "zod";
 
-const toneSchema = z.enum(["neutral", "accent", "success", "warning"]);
 const gapSchema = z.enum(["sm", "md", "lg"]);
 const directionSchema = z.enum(["vertical", "horizontal"]);
-const buttonVariantSchema = z.enum(["default", "outline", "secondary", "ghost"]);
-const emphasisSchema = z.enum(["default", "strong", "muted"]);
+const buttonVariantSchema = z.enum(["default", "outline"]);
+
+export const demoModelId = "anthropic/claude-sonnet-4.5";
 
 export const jsonRenderCatalog = defineCatalog(schema, {
   components: {
-    Section: {
-      props: z.object({
-        eyebrow: z.string().optional(),
-        title: z.string(),
-        description: z.string().optional(),
-        tone: toneSchema.optional(),
-      }),
-      slots: ["default"],
-      description:
-        "A framed section for a generated dashboard block, form block, or summary block.",
-    },
     Stack: {
       props: z.object({
         direction: directionSchema.optional(),
         gap: gapSchema.optional(),
-        wrap: z.boolean().optional(),
       }),
       slots: ["default"],
       description:
-        "A layout wrapper for arranging children vertically or horizontally with consistent spacing.",
+        "Layout container that stacks children vertically or horizontally.",
     },
-    Grid: {
-      props: z.object({
-        columns: z.number().int().min(1).max(3).optional(),
-        gap: gapSchema.optional(),
-      }),
-      slots: ["default"],
-      description:
-        "A responsive grid for metrics, option cards, or grouped callouts.",
-    },
-    Metric: {
-      props: z.object({
-        label: z.string(),
-        value: z.string(),
-        helper: z.string().optional(),
-        tone: toneSchema.optional(),
-      }),
-      description:
-        "Displays a key metric with a label, main value, and optional supporting note.",
-    },
-    Copy: {
-      props: z.object({
-        content: z.string(),
-        emphasis: emphasisSchema.optional(),
-      }),
-      description:
-        "Short explanatory copy, summaries, or dynamic text created from state.",
-    },
-    ActionButton: {
-      props: z.object({
-        label: z.string(),
-        variant: buttonVariantSchema.optional(),
-      }),
-      description:
-        "A button that emits a press event so the spec can trigger built-in actions like setState.",
-    },
-    InputField: {
-      props: z.object({
-        label: z.string(),
-        value: z.string().optional(),
-        placeholder: z.string().optional(),
-        helper: z.string().optional(),
-        multiline: z.boolean().optional(),
-      }),
-      description:
-        "An input field that supports two-way state binding through $bindState.",
-    },
-    StatusNotice: {
+    Card: {
       props: z.object({
         title: z.string(),
-        message: z.string(),
-        tone: toneSchema.optional(),
+        description: z.string().nullable(),
+      }),
+      slots: ["default"],
+      description:
+        "Card container with a title, optional description, and nested content.",
+    },
+    Text: {
+      props: z.object({
+        content: z.string(),
       }),
       description:
-        "A compact callout for guidance, confirmation, or contextual next steps.",
+        "Plain supporting text or a short paragraph.",
+    },
+    Button: {
+      props: z.object({
+        label: z.string(),
+        variant: buttonVariantSchema.nullable().optional(),
+      }),
+      description:
+        "Clickable button. Add an `on.press` action when the UI needs interactivity.",
     },
   },
-  actions: {},
+  actions: {
+    show_message: {
+      params: z.object({
+        message: z.string(),
+      }),
+      description: "Show a short confirmation message below the generated UI.",
+    },
+  },
 });
 
-export const catalogBlueprint = [
-  {
-    name: "Section",
-    description: "Framed content block for dashboards, forms, or summaries.",
-    props: ["title", "description", "tone"],
-  },
-  {
-    name: "Stack",
-    description: "Simple layout primitive that keeps spacing and direction consistent.",
-    props: ["direction", "gap", "wrap"],
-  },
-  {
-    name: "Grid",
-    description: "Responsive grid for grouped metrics or option cards.",
-    props: ["columns", "gap"],
-  },
-  {
-    name: "Metric",
-    description: "Single KPI tile with value, label, and helper text.",
-    props: ["label", "value", "helper"],
-  },
-  {
-    name: "Copy",
-    description: "Narrative text that can use templates or state-driven content.",
-    props: ["content", "emphasis"],
-  },
-  {
-    name: "ActionButton",
-    description: "Interactive control that fires a named event into the spec.",
-    props: ["label", "variant"],
-  },
-  {
-    name: "InputField",
-    description: "Bound text field for assistant-led intake or onboarding flows.",
-    props: ["label", "value", "multiline"],
-  },
-  {
-    name: "StatusNotice",
-    description: "Inline callout for confirmation, warnings, or follow-up guidance.",
-    props: ["title", "message", "tone"],
-  },
+export const systemPrompt = jsonRenderCatalog.prompt({
+  system: "You generate compact UI specs for a simple json-render demo page.",
+  customRules: [
+    "Return only json-render patch lines. No prose, no markdown fences, no explanations.",
+    "Keep the UI compact and practical.",
+    "Prefer one root Stack with one or two Cards.",
+    "Use short titles and concise copy.",
+    "When you include a Button, wire `on.press` to `show_message` with a short message.",
+    "Do not invent components, props, or actions outside this catalog.",
+  ],
+});
+
+export const examplePrompts = [
+  "Create a compact launch card with a short summary and one primary button.",
+  "Build a simple two-card event layout with details and an RSVP action.",
+  "Make a tiny onboarding panel with three short text steps and a continue button.",
 ] as const;

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { JsonRenderDemo } from "./JsonRenderDemo";
 
 export const metadata: Metadata = {
-  title: "Json Render Demo",
-  description: "A small demo page explaining where json-render fits and how it works.",
+  title: "json-render Demo",
+  description: "A simple json-render quick-start style demo that generates UI from a prompt.",
 };
 
 export default function JsonRenderPage() {
