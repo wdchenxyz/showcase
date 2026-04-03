@@ -10,6 +10,7 @@ import {
 } from "@xyflow/react"
 import Dagre from "@dagrejs/dagre"
 import "@xyflow/react/dist/style.css"
+import "./story-flow.css"
 
 import { storyData } from "../_data/story-data"
 import type { StoryNode } from "../_lib/types"

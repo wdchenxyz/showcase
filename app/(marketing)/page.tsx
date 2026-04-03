@@ -37,6 +37,12 @@ export default function Page() {
         >
           Json Render
         </Link>
+        <Link
+          href="/demo/story-flow"
+          className="rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent"
+        >
+          Story Flow
+        </Link>
       </div>
     </div>
   );
