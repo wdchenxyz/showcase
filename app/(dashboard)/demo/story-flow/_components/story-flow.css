@@ -1,0 +1,23 @@
+.react-flow__controls {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+}
+
+.react-flow__controls-button {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  fill: var(--muted-foreground);
+}
+
+.react-flow__controls-button:hover {
+  background: var(--accent);
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none;
+}
