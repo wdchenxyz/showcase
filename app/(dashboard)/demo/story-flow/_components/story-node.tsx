@@ -2,7 +2,7 @@
 
 import { memo } from "react"
 import { Handle, Position, type NodeProps } from "@xyflow/react"
-import { HugeiconsIcon } from "@hugeicons/react"
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react"
 import * as icons from "@hugeicons/core-free-icons"
 import { cn } from "@/lib/utils"
 import { CATEGORY_COLORS, type StoryNode } from "../_lib/types"
@@ -14,7 +14,7 @@ function StoryNodeComponent({ data }: NodeProps) {
   const colors = CATEGORY_COLORS[nodeData.category]
   const IconComponent = (icons as Record<string, unknown>)[
     `${nodeData.icon}Icon`
-  ] as icons.IconSvgElement | undefined
+  ] as IconSvgElement | undefined
 
   return (
     <>
