@@ -16,6 +16,7 @@ import { storyData } from "../_data/story-data"
 import type { StoryNode } from "../_lib/types"
 import { StoryNodeType } from "./story-node"
 import { StoryEdgeType } from "./story-edge"
+import { TimelineLabelType } from "./timeline-label"
 import { StoryTooltip } from "./story-tooltip"
 import { StepperControls } from "./stepper-controls"
 
@@ -54,8 +55,52 @@ function getLayoutedElements(nodes: Node[], edges: Edge[]) {
   return { nodes: layoutedNodes, edges }
 }
 
-const nodeTypes = { story: StoryNodeType }
+const nodeTypes = { story: StoryNodeType, timelineLabel: TimelineLabelType }
 const edgeTypes = { story: StoryEdgeType }
+
+function formatDate(date: string): string {
+  const [year, month] = date.split("-")
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  return `${months[parseInt(month) - 1]} ${year}`
+}
+
+function addTimelineLabels(nodes: Node[]): Node[] {
+  // Group non-label nodes by their Y position (dagre rank = same Y)
+  const yToDate = new Map<number, string>()
+  let minX = Infinity
+
+  for (const node of nodes) {
+    if (node.type === "timelineLabel") continue
+    const y = Math.round(node.position.y)
+    minX = Math.min(minX, node.position.x)
+    // Find the date for this node from its data
+    const date = (node.data as Record<string, unknown>).date as string
+    if (date && !yToDate.has(y)) {
+      yToDate.set(y, date)
+    }
+  }
+
+  // Deduplicate by date (multiple Y positions might have the same date)
+  const dateToY = new Map<string, number>()
+  for (const [y, date] of yToDate) {
+    if (!dateToY.has(date)) {
+      dateToY.set(date, y)
+    }
+  }
+
+  const labelNodes: Node[] = Array.from(dateToY.entries()).map(
+    ([date, y]) => ({
+      id: `label-${date}`,
+      type: "timelineLabel",
+      position: { x: minX - 90, y },
+      data: { label: formatDate(date) },
+      selectable: false,
+      draggable: false,
+    })
+  )
+
+  return [...nodes, ...labelNodes]
+}
 
 function StoryFlowInner() {
   const { fitView } = useReactFlow()
@@ -105,7 +150,8 @@ function StoryFlowInner() {
         },
       }))
 
-    return getLayoutedElements(rfNodes, rfEdges)
+    const laid = getLayoutedElements(rfNodes, rfEdges)
+    return { nodes: addTimelineLabels(laid.nodes), edges: laid.edges }
   }, [visibleIds])
 
   // Fit view when step changes
