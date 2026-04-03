@@ -43,6 +43,12 @@ export default function Page() {
         >
           Story Flow
         </Link>
+        <Link
+          href="/demo/story-flow/explore"
+          className="rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent"
+        >
+          Explore
+        </Link>
       </div>
     </div>
   );
