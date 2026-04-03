@@ -158,8 +158,11 @@ app/(dashboard)/demo/story-flow/
 
 ## Styling
 
+- **Minimal design** — no decorative flourishes, let the data and layout speak. Clean lines, restrained color, generous whitespace.
 - All components use `cn()` helper with Tailwind classes
-- Category colors defined as CSS variables in the component or a shared constant
-- Node and tooltip styles follow shadcn card/badge patterns
+- Category colors are subtle tints (low opacity backgrounds, muted borders) — not bold or saturated
+- Node and tooltip styles follow shadcn card/badge patterns exactly — same border radius, shadow, and color tokens
 - Controls use shadcn `Button` component with `ghost` and `outline` variants
+- React Flow chrome (zoom controls, minimap if any) styled to match shadcn — override default xyflow styles
 - Dark mode compatible via existing theme tokens
+- No custom fonts, gradients, or visual effects beyond the node reveal animation
