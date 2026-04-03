@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useReducer } from "react"
 import type { StoryFlowService } from "../_services/service"
-import type { Article } from "./types"
 import { SIMILARITY_THRESHOLD } from "./types"
 import { treeReducer, initialState } from "./reducer"
 

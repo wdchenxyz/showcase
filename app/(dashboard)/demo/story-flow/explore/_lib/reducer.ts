@@ -1,4 +1,4 @@
-import type { TreeState, TreeAction, TreeNode, Article } from "./types"
+import type { TreeState, TreeAction, TreeNode } from "./types"
 import { SIMILARITY_THRESHOLD } from "./types"
 
 export const initialState: TreeState = {
